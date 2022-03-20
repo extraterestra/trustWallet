@@ -1,4 +1,4 @@
-package pages.homeWork;
+package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -20,21 +20,21 @@ public class ProductPage {
     public void addProductToCart(String size) {
         selectSize(size);
         driver.findElement(addToBagButtonBy).click();
-        System.out.println("Product added");
 
     }
 
     public void selectSize(String size) {
         WebElement sizeListElement = driver.findElement(sizeListBy);
         List<WebElement> elements = sizeListElement.findElements(By.tagName("li"));
-        System.out.println(elements.size());
-        elements.get(0).click();
-        System.out.println("Product added with size" + size);
+        for (WebElement el:elements){
+            if(el.getText().equals(size)){el.click();}
+        }
+        System.out.println("Product added with size " + size);
 
     }
 
     public int getProdNumberInCart() {
-        String value = driver.findElement(itemsInBag).getAttribute("innerText");
+        String value = driver.findElement(itemsInBag).getText();
         int result = Integer. valueOf(value);
         return result;
 

@@ -1,8 +1,7 @@
-package pages.homeWork;
+package pages;
 
 import org.openqa.selenium.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SearchResultsPage {
@@ -21,7 +20,19 @@ public class SearchResultsPage {
         WebElement prodListElement = driver.findElement(productContainerList);
         List<WebElement> elements = prodListElement.findElements(By.tagName("li"));
         System.out.println(elements.size());
-        elements.get(0).click();
+        elements.get(1).click();
+        return new ProductPage(driver);
+    }
+
+    public ProductPage chooseProductByName(String prodName){
+        WebElement prodListElement = driver.findElement(productContainerList);
+        List<WebElement> elements = prodListElement.findElements(By.tagName("li"));
+
+
+        for (WebElement el : elements){
+            if (el.getText().contains(prodName)){el.click();}
+        }
+
         return new ProductPage(driver);
     }
 
