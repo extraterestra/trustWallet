@@ -2,32 +2,44 @@ package homeWork;
 
 import base.BaseTests;
 import org.testng.annotations.Test;
-import pages.ProductPage;
-import pages.SearchResultsPage;
-import pages.SportHomePage;
+import pages.*;
 
-import static org.testng.Assert.assertEquals;
+import java.util.List;
+
 import static org.testng.Assert.assertTrue;
 
 public class homeWorkTest extends BaseTests {
+    WelcomePage welcomePage;
+    ShareDataPage shareDataPage;
+    SetPasswordPage setPasswordPage;
+    BackUpInstructionPage backUpInstructionPage;
+    SecretPhrasePage secretPhrasePage;
+    ConfirmSecretPhrasePage confirmSecretPhrasePage;
+    OpenWalletPage openWalletPage;
 
     @Test
-    public void testAddBootsProductToCart(){
-        SportHomePage sportHomePage = languageModal.chooseBritishLanguage();
-        SearchResultsPage searchResultsPage = sportHomePage.searchForProduct("Nike Flex Runner Little Kids' Shoe");
-        ProductPage productPage = searchResultsPage.chooseProduct();
-        productPage.addProductToCart("C11 (28.5)");
-        assertEquals(productPage.getProdNumberInCart(), 1);
+    public void testTrustWalletHapyPath() throws InterruptedException {
+        welcomePage = new WelcomePage(driver);
+        assertTrue(welcomePage.welcomePageIsLoaded());
+        shareDataPage = welcomePage.getShareDataPage(driver);
+        assertTrue(shareDataPage.shareDataPageIsLoaded());
+        setPasswordPage = shareDataPage.getPasswordPage(driver);
+        setPasswordPage.setPasswordPageIsLoaded();
+        setPasswordPage.setPassword("Bin@nce10");
+        setPasswordPage.confirmPassword("Bin@nce10");
+        setPasswordPage.confirmCheckbox();
+        backUpInstructionPage = setPasswordPage.getBackUpInstructionPage(driver);
+        assertTrue(backUpInstructionPage.backUpInstructionPageIsLoaded());
+        secretPhrasePage = backUpInstructionPage.getSecretPhrasePage(driver);
+        assertTrue(secretPhrasePage.secretPhraseIsLoaded());
+        secretPhrasePage.revealPhrase();
+        List<String> phrase = secretPhrasePage.getSecretPhrase();
+        confirmSecretPhrasePage = secretPhrasePage.getConfirmSecretPhrasePage(driver);
+        assertTrue(confirmSecretPhrasePage.confirmSecretPhrasePageIsLoaded());
+        confirmSecretPhrasePage.printSecretPhrase(phrase);
+        openWalletPage = confirmSecretPhrasePage.getOpenWalletPage(driver);
+        assertTrue(openWalletPage.openWalletPageIsLoaded());
 
     }
 
-    @Test
-    public void testAddTShirtProductToCart(){
-        SportHomePage sportHomePage = languageModal.chooseBritishLanguage();
-        SearchResultsPage searchResultsPage = sportHomePage.searchForProduct("Nike T-Shirt");
-        ProductPage productPage = searchResultsPage.chooseProduct();
-        productPage.addProductToCart("7-8 Yrs");
-        assertEquals(productPage.getProdNumberInCart(), 1);
-
-    }
 }
