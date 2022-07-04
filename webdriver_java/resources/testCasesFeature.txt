@@ -1,0 +1,95 @@
+Feature: Trust Wallet Onboarding
+#  Welcome page -> Share data page -> Set Password page-> Back Up Your Secret Phrase page-> Recovery phrase page -> Confirm recovery page
+
+  Scenario Outline: Onboarding happy path positive
+    Given TrustWallet extention imported
+    And Welcome Page is opened
+    When I create a new TrustWallet
+    Then Share data page opened with elements
+      | Label  | Help improve Trust Wallet Extension by sharing usage patterns |
+      | Label  | Data                                                          |
+      | Label  | Anonymous                                                     |
+      | Label  | Optional                                                      |
+      | Button | Do not Share                                                  |
+      | Button | Share data                                                    |
+    When I share data
+    Then Set Password page is opened with elements
+      | Label        | Help improve Trust Wallet Extension by sharing usage patterns |
+      | Progress bar | Password, Secret Phrase, Confirm                              |
+      | Textfield    | Password                                                      |
+      | Textfield    | Confirm Password                                              |
+      | Checkbox     | I have read and agree                                         |
+      | Button       | Back                                                          |
+      | Button       | Next                                                          |
+    When I enter "<validPassword>" and "<validConfirmPassword>"
+    And I confirm I agree to teh terms of use
+    And I progress to BackUpInstructionPage with elements
+      | Label  | Back Up Your Secret Phrase |
+      | Label  | Info 1                     |
+      | Label  | Info 2                     |
+      | Button | Back                       |
+      | Button | Start                      |
+    And I progress to Secrep Phrase page
+    Then Secrep Phrase page is opened with elements
+      | Label        | Your Secret Phrase               |
+      | Progress bar | Password, Secret Phrase, Confirm |
+      | Textfield    | Revael phrase                    |
+      | Button       | Reveal                           |
+      | Button       | Back                             |
+      | Button       | Next                             |
+    And button Reveal is present and active
+    And Button Next is disabled
+    When I reveal secret phrase
+    Then reveal phrase is visible and I can copy it
+    And butto Next is enabled
+    When I progress to Conrirm secret pfrase page
+    Then Confirm Secret Phrase page is opened with elements
+      | Label        | Confirm Your Secret Phrase       |
+      | Progress bar | Password, Secret Phrase, Confirm |
+      | Lable        | Please select each word          |
+      | Button       | Reveal                           |
+      | Button       | Back                             |
+      | Button       | Next                             |
+
+    When I confirm  valid "<secretPhrase>"
+    Then button Next became enabled
+    And I progress to Open Wallet page
+    And  Open Wallet page is opened with elements
+      | Label  | Your wallet has been created |
+      | Button | Open wallet                  |
+
+    Examples:
+      | validPassword | validConfirmPassword | secretPhrase |
+      | Bin@nce10     | Bin@nce10            | valid        |
+
+
+  Scenario Outline: Onboarding invalid confirm password negative
+    Given TrustWallet extention imported
+    And Welcome Page is opened
+    When I create a new TrustWallet
+    Then Share data page opened with elements
+      | Label  | Help improve Trust Wallet Extension by sharing usage patterns |
+      | Label  | Data                                                          |
+      | Label  | Anonymous                                                     |
+      | Label  | Optional                                                      |
+      | Button | Do not Share                                                  |
+      | Button | Share data                                                    |
+    When I share data
+    Then Set Password page is opened with elements
+      | Label        | Help improve Trust Wallet Extension by sharing usage patterns |
+      | Progress bar | Password, Secret Phrase, Confirm                              |
+      | Textfield    | Password                                                      |
+      | Textfield    | Confirm Password                                              |
+      | Checkbox     | I have read and agree                                         |
+      | Button       | Back                                                          |
+      | Button       | Next                                                          |
+    When I enter "<validPassword>" and "<invalidConfirmPassword>"
+    Then fields Passwors and Confirm Password a higlighted red
+    And button Next is disabled
+    
+    Examples:
+      | validPassword | invalidConfirmPassword |
+      | Bin@nce10     | Bin@nce11              |
+
+
+  Scenario: Onboarding invalid secret phrase negative...
