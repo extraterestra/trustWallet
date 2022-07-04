@@ -1,1 +1,3 @@
-
+Please update version of Chrome driver according to your local Chrome version in trustWallet/webdriver_java/resources/ folder
+You can run test from trustWallet/webdriver_java/src/test/java/homeWork/homeWorkTest.java
+BDD test scenarios are given only as example it is not implemented
